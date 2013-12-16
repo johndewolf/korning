@@ -1,0 +1,16 @@
+<h1>Employee Sales</h1>
+<table>
+  <th>Last Name</th>
+  <th>First Name</th>
+  <th>Sale Date</th>
+  <th>Sale Amount</th>
+  <th>Units Sold</th>
+
+  <% @employee.sales.each do |sale| %>
+    <tr>
+      <td><%= sale.sale_date %></td>
+      <td><%= sale.sale_amount %></td>
+      <td><%= sale.units_sold %></td>
+    </tr>
+  <% end%>
+</table>
