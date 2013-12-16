@@ -13,46 +13,25 @@ end
 CSV.foreach(datafile, headers: true) do |row|
 
   employee_info = split_employee_name(row['employee'])
-  Employee.find_or_create_by(last_name: employee_info[1],
+  employee = Employee.find_or_create_by(last_name: employee_info[1],
     first_name: employee_info[0],
     email: employee_info[2].gsub(/[()]/,''))
 
-  Product.find_or_create_by(name: row['product_name'])
+  product = Product.find_or_create_by(name: row['product_name'])
 
   customer_info = split_product(row['customer_and_account_no'])
-  Customer.find_or_create_by(name: customer_info[0].strip,
+  customer = Customer.find_or_create_by(name: customer_info[0].strip,
     account_number: customer_info[1])
 
-    Sale.find_or_create_by(invoice_no: row['invoice_no']) do |sale|
-    sale.employee = row['employee']
-    sale.customer_and_account_no = row['customer_and_account_no']
-    sale.product_name = row['product_name']
-    sale.sale_date = row['sale_date']
-    sale.sale_amount = row['sale_amount']
+  Sale.find_or_create_by(invoice_id: row['invoice_no']) do |sale|
+    sale.employee_id = employee.id
+    sale.customer_id = customer.id
+    sale.product_id = product.id
+    sale.sale_date = Chronic.parse(row['sale_date'])
+    sale.sale_amount = row['sale_amount'].gsub(/[$]/,'')
     sale.units_sold = row['units_sold']
-    sale.invoice_no = row['invoice_no']
-    sale.invoice_frequency = row['invoice_frequency']
-
+    sale.invoice_id = row['invoice_no']
+    sale.invoice_freq = row['invoice_frequency']
+  end
 
 end
-
-
-
-
-
-#   populate_labels (in up)
-#   def populate_lables
-#     ProductionSechdule.all.each do |ps|
-#       Label.find_or_create_by(name: ps.label) do |lbl|
-#         lbl.name = ps.label
-#       end
-#     end
-#   end
-# end
-
-# def link_labels
-#   Productions Schedule.all.each do |ps|
-#     label = Label.find_by(name: ps.label)
-#     ps.update_attribute(:label_id, label.id)
-#   end
-# end

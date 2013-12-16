@@ -1,0 +1,9 @@
+<h1>Sales</h1>
+<table>
+  <th> Sale ID</th>
+  <% @sales.each do |sale| %>
+    <tr>
+    <td><%= sale.id%></td>
+  </tr>
+  <% end%>
+</table>
